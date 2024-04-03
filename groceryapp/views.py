@@ -1,10 +1,11 @@
 from django.shortcuts import render,redirect
 from django.views.generic import View
-from .models import Carousel
+from .models import Carousel,Booking,Feedback
 from django.contrib.auth import authenticate,login,logout
-from .models import Category,UserProfileTable
+from .models import Category,UserProfileTable,Cart
 from django.contrib import messages
 from django.contrib.auth.models import User
+import json
 
 
 # Create your views here.
@@ -146,7 +147,6 @@ def userlogin(request):
             messages.success(request,"Invalid Credentials")
     return render(request, 'login.html', locals())
 
-
 def profile(request):
     data = UserProfileTable.objects.get(user=request.user)
     if request.method == "POST":
@@ -183,7 +183,7 @@ def change_password(request):
                 user.set_password(n)
                 user.save()
                 messages.success(request, "Password Changed")
-                return redirect('main')
+                return redirect('userlogin')
             else:
                 messages.success(request, "Password not matching")
                 return redirect('change_password')
@@ -206,4 +206,114 @@ def product_detail(request, pid):
     latest_product = Product.objects.filter().exclude(id=pid).order_by('-id')[:10]
     return render(request, "product_detail.html", locals())
 
+def addToCart(request, pid):
+    myli = {"objects":[]}
+    try:
+        cart = Cart.objects.get(user=request.user)
+        myli = json.loads((str(cart.product)).replace("'", '"'))
+        try:
+            myli['objects'][0][str(pid)] = myli['objects'][0].get(str(pid), 0) + 1
+        except:
+            myli['objects'].append({str(pid):1})
+        cart.product = myli
+        cart.save()
+    except:
+        myli['objects'].append({str(pid): 1})
+        cart = Cart.objects.create(user=request.user, product=myli)
+    return redirect('cart')
 
+def incredecre(request, pid):
+    cart = Cart.objects.get(user=request.user)
+    if request.GET.get('action') == "incre":
+        myli = json.loads((str(cart.product)).replace("'", '"'))
+        myli['objects'][0][str(pid)] = myli['objects'][0].get(str(pid), 0) + 1
+    if request.GET.get('action') == "decre":
+        myli = json.loads((str(cart.product)).replace("'", '"'))
+        if myli['objects'][0][str(pid)] == 1:
+            del myli['objects'][0][str(pid)]
+        else:
+            myli['objects'][0][str(pid)] = myli['objects'][0].get(str(pid), 0) - 1
+    cart.product = myli
+    cart.save()
+    return redirect('cart')
+
+def cart(request):
+    try:
+        cart = Cart.objects.get(user=request.user)
+        product = (cart.product).replace("'", '"')
+        myli = json.loads(str(product))
+        product = myli['objects'][0]
+    except:
+        product = []
+    lengthpro = len(product)
+    return render(request, 'cart.html', locals())
+    
+def deletecart(request, pid):
+    cart = Cart.objects.get(user=request.user)
+    product = (cart.product).replace("'", '"')
+    myli = json.loads(str(product))
+    del myli['objects'][0][str(pid)]
+    cart.product = myli
+    cart.save()
+    messages.success(request, "Delete Successfully")
+    return redirect('cart')
+
+def booking(request):
+    user= UserProfileTable.objects.get(user=request.user)
+    cart = Cart.objects.get(user=request.user)
+    total = 0
+    productid = (cart.product).replace("'", '"')
+    productid = json.loads(str(productid))
+    try:
+        productid = productid['objects'][0]
+    except:
+        messages.success(request, "Cart is empty, Please add product in cart.")
+        return redirect('cart')
+    for i,j in productid.items():
+        product = Product.objects.get(id=i)
+        total += int(j) * int(product.price)
+    if request.method == "POST":
+        book = Booking.objects.create(user=request.user, product=cart.product, total=total)
+        cart.product = {'objects':[]}
+        cart.save()
+        messages.success(request, "Book Order Successfully")
+        return redirect('home')
+    return render(request, "booking.html", locals())
+
+
+def myOrder(request):
+    order = Booking.objects.filter(user=request.user)
+    return render(request, "my-order.html", locals())
+
+def user_order_track(request, pid):
+    ORDERSTATUS = ((1, "Pending"), (2, "Dispatch"), (3, "On the way"), (4, "Delivered"), (5, "Cancel"), (6, "Return"))
+    order = Booking.objects.get(id=pid)
+    orderstatus = ORDERSTATUS
+    return render(request, "user-order-track.html", locals())
+
+def change_order_status(request, pid):
+    order = Booking.objects.get(id=pid)
+    status = request.GET.get('status')
+    if status:
+        order.status = status
+        order.save()
+        messages.success(request, "Order status changed.")
+    return redirect('myorder')
+
+def user_feedback(request):
+    user = UserProfileTable.objects.get(user=request.user)
+    if request.method == "POST":
+        Feedback.objects.create(user=request.user, message=request.POST['feedback'])
+        messages.success(request, "Feedback sent successfully")
+    return render(request, "feedback-form.html", locals())
+
+def manage_feedback(request):
+    action = request.GET.get('action', 0)
+    feedback = Feedback.objects.filter(status=int(action))
+    return render(request, 'manage_feedback.html', locals())
+
+def delete_feedback(request, pid):
+    feedback = Feedback.objects.get(id=pid)
+    feedback.delete()
+    messages.success(request, "Deleted successfully")
+    return redirect('manage_feedback')

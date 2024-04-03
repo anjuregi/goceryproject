@@ -42,9 +42,19 @@ urlpatterns = [
     path('userlogin/', userlogin, name="userlogin"),
     path('profile/', profile, name="profile"),
     path('logout/', logoutuser, name="logout"),
-    path('change-password/', change_password, name="change_password"),
+    path('change_password/', change_password, name="change_password"),
     path('user-product/<int:pid>/', user_product, name="user_product"),
     path('product-detail/<int:pid>/', product_detail, name="product_detail"),
+    path('add-to-cart/<int:pid>/', addToCart, name="addToCart"),
+    path('cart/', cart, name="cart"),
+    path('incredecre/<int:pid>/', incredecre, name="incredecre"),
+    path('deletecart/<int:pid>/', deletecart, name="deletecart"),
+    path('booking/', booking, name="booking"),
+    path('my-order/', myOrder, name="myorder"),
+    path('user-order-track/<int:pid>/', user_order_track, name="user_order_track"),
+    path('change-order-status/<int:pid>/', change_order_status, name="change_order_status"),
+    path('user-feedback/', user_feedback, name="user_feedback"),
+    path('manage-feedback/', manage_feedback, name="manage_feedback"),
 
 
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
