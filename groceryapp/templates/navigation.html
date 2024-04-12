@@ -42,7 +42,7 @@
         </button>
         <div class="collapse navbar-collapse text-center" id="myMenu">
             <ul class="navbar-nav pl-5 custom-nav ml-auto">
-                <li class="nav-item"><a href="/main/" class="nav-link"><i class="fas fa-home"></i>
+                <li class="nav-item"><a href="{% url 'home' %}" class="nav-link"><i class="fas fa-home"></i>
                     Home{{is_authenticated}}</a></li>
                 <li class="nav-item"><a href="/user-product/0/" class="nav-link">Product</a></li>
                 {% if not request.user.is_authenticated %}
@@ -52,7 +52,7 @@
                 <li class="nav-item"><a href="{% url 'registration' %}" class="nav-link">Signup</a></li>
                 <li class="nav-item"><a href="{% url 'admin_login' %}" class="nav-link">Admin Login</a></li>
                 {% else %}
-                <li class="nav-item"><a href="/user-feedback/" class="nav-link">Feedback</a></li>
+                <li class="nav-item"><a href="/user_feedback/" class="nav-link">Feedback</a></li>
 
                 <li class="nav-item"><a href="/my-order/" class="nav-link">My Order</a></li>
                 <li class="nav-item"><a href="/cart/" class="nav-link">My Cart</a></li>

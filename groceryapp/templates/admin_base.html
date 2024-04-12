@@ -30,30 +30,26 @@
             </div>
         </div>
     </div>
-
- 
     <!--.flex-column to display the flex items vertically (on top of each other)-->
     <ul class="nav flex-column bg-white">
         <li class="nav-item">
-            <a href="" class="nav-link text-dark bg-light">
+            <a href="/admindashboard/" class="nav-link text-dark bg-light">
                 <i class="fas fa-tachometer-alt fa-fw mr-3 text-primary"></i>
                 Dashboard
             </a>
         </li>
         <!--fa-fw class is used to set icons at a fixed width. This class is useful when different icon widths throw off alignment-->
-
- 
+       
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle text-dark bg-light" href="#" id="navbardrop" data-toggle="dropdown">
                 <i class="fas fa-chart-bar mr-3 text-primary fa-fw"></i> Grocery Category
             </a>
             <div class="dropdown-menu">
-                <a class="dropdown-item" href="{%url 'add_category'%}">Add Category</a>
-                <a class="dropdown-item" href="{%url 'view_category'%}">View Category</a>
+                <a class="dropdown-item" href="/add-category/">Add Category</a>
+                <a class="dropdown-item" href="/view-category/">View Category</a>
             </div>
         </li>
-
- 
+       
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle text-dark bg-light" href="#" id="navbardrop" data-toggle="dropdown">
                 <i class="fas fa-chart-bar mr-3 text-primary fa-fw"></i> Manage Product
@@ -63,28 +59,31 @@
                 <a class="dropdown-item" href="{% url 'view_product' %}">View Product</a>
             </div>
         </li>
+
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle text-dark bg-light" href="#" id="navbardrop" data-toggle="dropdown">
                 <i class="fas fa-chart-bar mr-3 text-primary fa-fw"></i> Manage User
             </a>
             <div class="dropdown-menu">
-                <a class="dropdown-item" href="">View User</a>
-
- 
+                <a class="dropdown-item" href="/manage-user/">View User</a>
             </div>
         </li>
-        <li class="nav-item">
-            <a href="" class="nav-link text-dark bg-light">
-                <i class="fas fa-cog mr-3 text-primary fa-fw"></i>
-                Manage Order
+
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle text-dark bg-light" href="#" id="navbardrop" data-toggle="dropdown">
+                <i class="fas fa-chart-bar mr-3 text-primary fa-fw"></i>Manage Order
             </a>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" href="/manage-order/?action=1">New Order</a>
+                <a class="dropdown-item" href="/manage-order/?action=2">Dispatch Order</a>
+                <a class="dropdown-item" href="/manage-order/?action=3">On the way</a>
+                <a class="dropdown-item" href="/manage-order/?action=4">Delivered Order</a>
+                <a class="dropdown-item" href="/manage-order/?action=5">Cancel Order</a>
+                <a class="dropdown-item" href="/manage-order/?action=6">Return Order</a>
+                <a class="dropdown-item" href="/manage-order/?action=0">All Order</a>
+            </div>
         </li>
-        <!-- <li class="nav-item">
-            <a href="" class="nav-link text-dark bg-light">
-                <i class="fas fa-cog mr-3 text-primary fa-fw"></i>
-                Manage Feedback
-            </a>
-        </li> -->
+
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle text-dark bg-light" href="#" id="navbardrop" data-toggle="dropdown">
                 <i class="fas fa-chart-bar mr-3 text-primary fa-fw"></i>Manage Feedback
@@ -94,44 +93,40 @@
                 <a class="dropdown-item" href="/manage-feedback/?action=2">Unread Feedback</a>
             </div>
         </li>
+
         <li class="nav-item">
-            <a href="" class="nav-link text-dark bg-light">
+            <a href="/admin-change-password/" class="nav-link text-dark bg-light">
                 <i class="fas fa-cog mr-3 text-primary fa-fw"></i>
                 Change Password
             </a>
         </li>
+
         <li class="nav-item">
-            <a href="" class="nav-link text-dark bg-light">
+            <a href="/logout/" class="nav-link text-dark bg-light">
                 <i class="fas fa-sign-out-alt mr-3 text-primary fa-fw"></i>
                 Logout
             </a>
         </li>
-
- 
     </ul>
 </div>
 <!--vertical navbar end-->
 <!--page content holder-->
 <div class="page-content p-4" id="content">
-    <a href="" title="logout" class="float-right text-white"><i class="fas fa-sign-out-alt fa-2x"></i></a>
-
- 
+    <a href="/logout/" title="logout" class="float-right text-white"><i class="fas fa-sign-out-alt fa-2x"></i></a>
     <!--toggle btn-->
     <button id="sidebarCollapse" type="button" class="btn btn-light bg-white rounded-pill shadow-sm px-4 mb-4">
         <i class="fas fa-bars mr-2"></i>
         <small class="text-uppercase font-weight-bold">Toggle</small>
     </button>
     <!--end toggle btn-->
-    {% for i in messages %}
-<script>
-    alert('{{i}}');
-</script>
-{% endfor %}
-
- 
     {% block main %}
     {% endblock %}
 </div>
 <!--end page content holder-->
+{% for i in messages %}
+<script>
+    alert('{{i}}');
+</script>
+{% endfor %}
 </body>
 </html>

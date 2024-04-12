@@ -69,4 +69,14 @@ class Feedback(models.Model):
 
     def __str__(self):
         return self.user.username
+    
+
+class DeliveryProfileTable(models.Model):
+    user = models.ForeignKey (User, on_delete=models.CASCADE, null=True, blank=True)
+    mobile = models.CharField(max_length=100, null=True, blank=True)
+    address = models.TextField(null=True, blank=True)
+    image = models.FileField(null=True, blank=True)
+   
+    def __str__(self):
+        return self.user.username
 
